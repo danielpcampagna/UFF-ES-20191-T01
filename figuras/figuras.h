@@ -1,0 +1,5 @@
+#include"circulo.h"
+#include"quadrado.h"
+#include"retangulo.h"
+#include"trapezio.h"
+#include"triangulo.h"
