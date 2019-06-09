@@ -1,10 +1,14 @@
 #include<stdarg.h>
 
 typedef struct arvore_generica {
-    int id;
-    char *tipo;
-    struct arvore_generica *filho, *irmao;
-    void *figura;
+    int id; // id do nó atual.
+    char *tipo; // tipo da figura (e.g. 'QUA').
+    struct arvore_generica *filho, *irmao; 
+    /*
+        - filho: ponteiro para o primeiro filho;
+        - irmao: ponteiro para o próximo irmão;
+    */
+    void *figura; // ponteiro para a figura.
 } TAG;
 
 TAG* criar_arv_gen(void);
