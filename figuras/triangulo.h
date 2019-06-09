@@ -3,5 +3,5 @@ typedef struct triangulo {
 } TTria;
 
 TTria* criar_tria(float base, float altura);
-TTria* alterar_tria(float base, float altura);
-float area_tria(TTria* fig);
+TTria* alterar_tria(TTria* f, float base, float altura);
+float area_tria(TTria* f);

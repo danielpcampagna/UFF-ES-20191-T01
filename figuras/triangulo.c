@@ -2,16 +2,18 @@
 #include "triangulo.h"
 
 TTria* criar_tria(float base, float altura){
-    TTria* result = NULL;
+    TTria* result = (TTria*) malloc(sizeof(TTria));
+    result->base = base;
+    result->altura = altura;
     return result;
 }
 
-TTria* alterar_tria(float base, float altura){
-    TTria* result = NULL;
-    return result;
+TTria* alterar_tria(TTria* f, float base, float altura){
+    f->base = base;
+    f->altura = altura;
+    return f;
 }
 
-float area_tria(TTria* fig){
-    float result = 0.0;
-    return result;
+float area_tria(TTria* f){
+    return f->base * f->base /2.0f;
 }

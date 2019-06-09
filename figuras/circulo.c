@@ -1,4 +1,10 @@
 #include <stdlib.h>
+#include <math.h>
+
+#ifndef M_PI
+#    define M_PI 3.14159265358979323846
+#endif
+
 #include "circulo.h"
 
 TCirc* criar_circ(float raio){
@@ -7,12 +13,11 @@ TCirc* criar_circ(float raio){
     return result;
 }
 
-TCirc* alterar_circ(float raio){
-    TCirc* result = NULL;
-    return result;
+TCirc* alterar_circ(TCirc* f, float raio){
+    f->raio = raio;
+    return f;
 }
 
-float area_circ(TCirc* fig){
-    float result = 0.0;
-    return result;
+float area_circ(TCirc* f){
+    return 2.0f * M_PI * f->raio;
 }

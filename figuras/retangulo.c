@@ -2,16 +2,18 @@
 #include "retangulo.h"
 
 TRetg* criar_retg(float base, float altura){
-    TRetg* result = NULL;
+    TRetg* result = (TRetg*) malloc(sizeof(TRetg));
+    result->base = base;
+    result->altura = altura;
     return result;
 }
 
-TRetg* alterar_retg(float base, float altura){
-    TRetg* result = NULL;
-    return result;
+TRetg* alterar_retg(TRetg* f, float base, float altura){
+    f->base = base;
+    f->altura = altura;
+    return f;
 }
 
-float area_retg(TRetg* fig){
-    float result = 0.0;
-    return result;
+float area_retg(TRetg* f){
+    return f->base * f->altura;
 }

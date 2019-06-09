@@ -3,5 +3,5 @@ typedef struct quadrado {
 } TQuad;
 
 TQuad* criar_quad(float lado);
-TQuad* alterar_quad(float lado);
-float area_quad(TQuad* fig);
+TQuad* alterar_quad(TQuad* f, float lado);
+float area_quad(TQuad* f);
