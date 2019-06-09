@@ -1,3 +1,6 @@
+#include <stdlib.h>
+#include "circulo.h"
+
 TCirc* criar_circ(float raio){
     TCirc* result = (TCirc*) malloc(sizeof(TCirc));
     result->raio = raio;
@@ -5,11 +8,11 @@ TCirc* criar_circ(float raio){
 }
 
 TCirc* alterar_circ(float raio){
-    TCirc* result;
+    TCirc* result = NULL;
     return result;
 }
 
 float area_circ(TCirc* fig){
-    float result;
+    float result = 0.0;
     return result;
 }
