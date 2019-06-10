@@ -1,21 +1,22 @@
 #include<stdarg.h>
 
+typedef struct no_figura {
+    int id;
+    char tipo[3];
+    void *figura;
+} TNOFIG;
+
 typedef struct arvore_generica {
-    int id; // id do nó atual.
-    char *tipo; // tipo da figura (e.g. 'QUA').
+    TNOFIG *info;
     struct arvore_generica *filho, *irmao; 
-    /*
-        - filho: ponteiro para o primeiro filho;
-        - irmao: ponteiro para o próximo irmão;
-    */
-    void *figura; // ponteiro para a figura.
 } TAG;
 
-TAG* criar_arv_gen(void);
-TAG* buscar_arv_gen(TAG *t, int id);
-void imprimir_arv_gen(TAG *t);
-TAG* inserir_arv_gen(TAG *t, char* tipo, TAG *pai, void *figura);
-TAG* retirar_arv_gen(TAG *t, int id);
-void destruir_arv_gen(TAG *t);
-TAG* alterar_figura_arv_gen(TAG *t, int id, void *func_alterar_figura_arv_gen(), ...);
-//TAG* inserir_arv_gen(TAG *t, int id, char* tipo, TAG *pai);
+
+TAG* cria(void);
+TAG* busca(TAG *t, int id);
+void imprime(TAG *t);
+TAG* insere(TAG *t, char* tipo, TAG *pai, void *figura);
+TAG* retira(TAG *t, int id);
+void destroi(TAG *t);
+TAG* altera(TAG *t, int id, void *altera_fig(), ...);
+//TAG* insere(TAG *t, int id, char* tipo, TAG *pai);

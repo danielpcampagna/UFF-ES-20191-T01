@@ -1,34 +1,34 @@
 #include "arvore_generica.h"
 
-TAG* criar_arv_gen(void){
+TAG* cria(void){
     return NULL;
 }
 
-TAG* buscar_arv_gen(TAG *t, int id){
+TAG* busca(TAG *t, int id){
     TAG* result = NULL;
     return result;
 }
 
-void imprimir_arv_gen(TAG *t){
+void imprime(TAG *t){
      TAG* result = NULL;
     return result;
 }
 
-TAG* inserir_arv_gen(TAG *t, char* tipo, TAG *pai, void *figura) {
+TAG* insere(TAG *t, char* tipo, TAG *pai, void *figura) {
     TAG* result = NULL;
     return result;
 }
 
-TAG* retirar_arv_gen(TAG *t, int id) {
+TAG* retira(TAG *t, int id) {
     TAG* result = NULL;
     return result;
 }
 
-void destruir_arv_gen(TAG *t) {
+void destroi(TAG *t) {
     return;
 }
 
-TAG* alterar_figura_arv_gen(TAG *t, int id, void *func_alterar_figura_arv_gen(), ...){
+TAG* altera(TAG *t, int id, void *altera_fig(), ...){
     TAG* result = NULL;
     return result;
 }
