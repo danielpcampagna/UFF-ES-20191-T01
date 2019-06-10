@@ -1,0 +1,1 @@
+char *ler_linha(FILE *fp);
