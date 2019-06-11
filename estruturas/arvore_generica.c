@@ -6,15 +6,15 @@ TAG *cria()
     return NULL;
 }
 
-TAG *busca(TAG *a, int x)
+TAG *busca(TAG *t, int id)
 {
-    if (a == NULL) return NULL;
-    if (a->id == x) return a;
+    if (!t) return t;
+    if (t->id == id) return t;
     
-    TAG *p = busca(a->irmao, x);
+    TAG *p = busca(t->irmao, id);
     
-    if (p != NULL) return p;
-    return busca(a->filho, x);
+    if (p) return p;
+    return busca(t->filho, id);
 }
 
 void insere(TAG *a, TAG *no, int pai)
