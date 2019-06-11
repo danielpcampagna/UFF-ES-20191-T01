@@ -1,5 +1,8 @@
 #include<stdarg.h>
 
+#ifndef ARVORE_GENERICA_H
+#define ARVORE_GENERICA_H
+
 typedef struct no_figura {
     int id;
     char tipo[3];
@@ -20,3 +23,5 @@ TAG* retira(TAG *t, int id);
 void destroi(TAG *t);
 TAG* altera(TAG *t, int id, void *altera_fig(), ...);
 //TAG* insere(TAG *t, int id, char* tipo, TAG *pai);
+
+#endif //ARVORE_GENERICA_H
