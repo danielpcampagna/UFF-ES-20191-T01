@@ -1,23 +1,63 @@
 #include "arvore_generica.h"
 
-TAG* cria(void){
-    return NULL;
+
+TAG* cria(){
+	TAG* p= malloc(sizeof(TAG));
+	return NULL;
 }
 
-TAG* busca(TAG *t, int id){
-    TAG* result = NULL;
-    return result;
+
+
+
+static TAG* busca(TAG* a, int x){
+if (a==NULL) return NULL;
+
+else if (a->id==x) return a;
+
+else {
+TAG* p= busca(a->irmao, x);
+if (p != NULL)
+return p;
+else return busca(a->filho, x);
 }
+
+}
+
+
+
+
+void insere(TAG* a, TAG* no, int pai ){
+
+if (a!=NULL) {
+	TAG* no= malloc(sizeof(TAG));
+	TAG* p=busca(a, pai);
+	if (p->filho==NULL) {
+		no->filho=NULL;
+		no->irmao=NULL;
+		p->filho=no;
+	}
+	else {
+		p=p->filho;
+		while (p) {
+			p=p->irmao;
+		}
+		no->filho=NULL;
+		no->irmao=NULL;
+		p->irmao=no;
+	}
+
+}
+
+}
+
+
 
 void imprime(TAG *t){
      TAG* result = NULL;
     return result;
 }
 
-TAG* insere(TAG *t, char* tipo, TAG *pai, void *figura) {
-    TAG* result = NULL;
-    return result;
-}
+
 
 TAG* retira(TAG *t, int id) {
     TAG* result = NULL;
