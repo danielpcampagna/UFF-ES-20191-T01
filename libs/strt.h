@@ -1,0 +1,1 @@
+char **separa(char *texto, char *separador, int qtd);
