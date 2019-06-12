@@ -1,22 +1,5 @@
 #include "arvore_generica.h"
 
-TAG *cria()
-{
-    TAG *p = malloc(sizeof(TAG));
-    return NULL;
-}
-
-TAG *busca(TAG *t, int id)
-{
-    if (!t) return t;
-    if (t->info->id == id) return t;
-    
-    TAG *p = busca(t->irmao, id);
-    
-    if (p) return p;
-    return busca(t->filho, id);
-}
-
 static TAG *busca_ant(TAG *t, int id)
 {
     if (!t) return t;
@@ -49,6 +32,24 @@ static void libera_no(TAG* p){
         }
         free(p);
     }
+}
+
+TAG *cria()
+{
+    TAG *p = malloc(sizeof(TAG));
+    p->info = p->filho = p->irmao = NULL;
+    return p;
+}
+
+TAG *busca(TAG *t, int id)
+{
+    if (!t) return t;
+    if (t->info->id == id) return t;
+    
+    TAG *p = busca(t->irmao, id);
+    
+    if (p) return p;
+    return busca(t->filho, id);
 }
 
 TAG* insere(TAG *a, TNOFIG *info, int pai)
