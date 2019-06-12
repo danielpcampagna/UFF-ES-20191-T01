@@ -42,8 +42,39 @@ void imprime(TAG *t)
 
 TAG *retira(TAG *t, int id)
 {
-    TAG *result = NULL;
-    return result;
+    if(!t) return t;
+
+    TAG *p = busca(t, id);
+    TAG *ant = busca_ant(t, id);
+    
+    if(!p) return t;
+    if(!ant) {
+        // já garante pela inserção de que não tem irmão.
+        if(e_folha(p)) {
+            libera_no(p);
+            return NULL;
+        }
+        TAG *nova_raiz = p->filho;
+        TAG *ultimo_filho_nova_raiz = ultimo_filho(nova_raiz);
+        ultimo_filho_nova_raiz->irmao = nova_raiz->irmao
+        nova_raiz->irmao = NULL;
+        libera_no(p);
+        return nova_raiz;
+    }
+    TAG *primeiro_filho_p = p->filho;
+    TAG *ultimo_filho_p = ultimo_filho(p);
+    
+    if(ant->filho == p){
+        if(!e_folha(p)) ant->filho = primeiro_filho_p;
+        else ant->filho = p->irmao;
+    } else if(ant->irmao == p){
+        if(!e_folha(p)) ant->irmao = primeiro_filho_p;
+        else ant->irmao = p->irmao;
+    }
+    
+    if(!e_folha(p)) ultimo_filho_p->irmao = p->irmao;
+    libera_no(p);
+    return t;
 }
 
 void destroi(TAG *t)
