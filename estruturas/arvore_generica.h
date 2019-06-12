@@ -15,13 +15,13 @@ typedef struct arvore_generica {
 } TAG;
 
 
+
 TAG* cria(void);
 TAG* busca(TAG *t, int id);
 void imprime(TAG *t);
-TAG* insere(TAG *t, char* tipo, TAG *pai, void *figura);
+TAG* insere(TAG *a, void *info, int pai);
 TAG* retira(TAG *t, int id);
 void destroi(TAG *t);
-TAG* altera(TAG *t, int id, void *altera_fig(), ...);
-//TAG* insere(TAG *t, int id, char* tipo, TAG *pai);
+// TAG* altera(TAG *t, int id, void *altera_fig(), ...);
 
 #endif //ARVORE_GENERICA_H

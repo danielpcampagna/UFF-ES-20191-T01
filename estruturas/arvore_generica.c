@@ -1,3 +1,5 @@
+#include <stdio.h>
+#include <stdlib.h>
 #include "arvore_generica.h"
 
 static TAG *busca_ant(TAG *t, int id)
@@ -19,7 +21,7 @@ static TAG* ultimo_filho(TAG *p){
     return p;
 }
 
-static e_folha(TAG* p){
+static int e_folha(TAG* p){
     return !p->filho;
 }
 
@@ -36,9 +38,10 @@ static void libera_no(TAG* p){
 
 TAG *cria()
 {
-    TAG *p = malloc(sizeof(TAG));
-    p->info = p->filho = p->irmao = NULL;
-    return p;
+    // TAG *p = malloc(sizeof(TAG));
+    // p->info = NULL;
+    // p->filho = p->irmao = NULL;
+    return NULL;
 }
 
 TAG *busca(TAG *t, int id)
@@ -52,7 +55,7 @@ TAG *busca(TAG *t, int id)
     return busca(t->filho, id);
 }
 
-TAG* insere(TAG *a, TNOFIG *info, int pai)
+TAG* insere(TAG *a, void *info, int pai)
 {
     if(!a && pai != 0) return a;
     
@@ -81,8 +84,15 @@ TAG* insere(TAG *a, TNOFIG *info, int pai)
 
 void imprime(TAG *t)
 {
-    TAG *result = NULL;
-    return result;
+    printf("imprime 1\n");
+    if(!t) return;
+    printf("imprime 2\n");
+    printf("<");
+    printf("imprime 3\n");
+    printf("%d",t->info->id);
+    imprime(t->irmao);
+    imprime(t->filho);
+    printf(">");
 }
 
 TAG *retira(TAG *t, int id)
@@ -101,7 +111,7 @@ TAG *retira(TAG *t, int id)
         }
         TAG *nova_raiz = p->filho;
         TAG *ultimo_filho_nova_raiz = ultimo_filho(nova_raiz);
-        ultimo_filho_nova_raiz->irmao = nova_raiz->irmao
+        ultimo_filho_nova_raiz->irmao = nova_raiz->irmao;
         nova_raiz->irmao = NULL;
         libera_no(p);
         return nova_raiz;
@@ -130,9 +140,9 @@ void destroi(TAG *t)
     libera_no(t);
 }
 
-TAG *altera(TAG *t, int id, void *altera_fig(), ...)
-{
-    TAG *result = NULL;
-    return result;
-}
+// TAG *altera(TAG *t, void *figura, void *altera_fig())
+// {
+//     TAG *result = NULL;
+//     return result;
+// }
 
