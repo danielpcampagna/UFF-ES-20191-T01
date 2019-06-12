@@ -10,6 +10,7 @@ TAB *cria_arvb(int t)
   TAB *novo = (TAB *)malloc(sizeof(TAB));
   novo->nchaves = 0;
   novo->chave = (int *)malloc(sizeof(int *) * ((t * 2) - 1));
+  novo->info = (TNOFIG **)malloc(sizeof(TNOFIG *) * ((t * 2) - 1));
   novo->folha = 1;
   novo->filho = (TAB **)malloc(sizeof(TAB *) * t * 2);
   int i;
@@ -33,6 +34,7 @@ TAB *libera_arvb(TAB *a)
     free(a);
     return NULL;
   }
+  return NULL;
 }
 
 void imprime_arvb(TAB *a, int andar)
@@ -98,7 +100,7 @@ TAB *divisao_arvb(TAB *x, int i, TAB *y, int t)
   return x;
 }
 
-TAB *insere_nao_completo_arvb(TAB *x, int k, int t)
+TAB *insere_nao_completo_arvb(TAB *x, int k, TNOFIG *info, int t)
 {
   int i = x->nchaves - 1;
   if (x->folha)
@@ -106,9 +108,11 @@ TAB *insere_nao_completo_arvb(TAB *x, int k, int t)
     while ((i >= 0) && (k < x->chave[i]))
     {
       x->chave[i + 1] = x->chave[i];
+      x->info[i + 1] = x->info[i];
       i--;
     }
     x->chave[i + 1] = k;
+    x->info[i + 1] = info;
     x->nchaves++;
     return x;
   }
@@ -121,11 +125,11 @@ TAB *insere_nao_completo_arvb(TAB *x, int k, int t)
     if (k > x->chave[i])
       i++;
   }
-  x->filho[i] = insere_nao_completo_arvb(x->filho[i], k, t);
+  x->filho[i] = insere_nao_completo_arvb(x->filho[i], k, info, t);
   return x;
 }
 
-TAB *insere_arvb(TAB *T, int k, int t)
+TAB *insere_arvb(TAB *T, int k, TNOFIG *info, int t)
 {
   if (busca_arvb(T, k))
     return T;
@@ -133,6 +137,7 @@ TAB *insere_arvb(TAB *T, int k, int t)
   {
     T = cria_arvb(t);
     T->chave[0] = k;
+    T->info[0] = info;
     T->nchaves = 1;
     return T;
   }
@@ -143,10 +148,10 @@ TAB *insere_arvb(TAB *T, int k, int t)
     S->folha = 0;
     S->filho[0] = T;
     S = divisao_arvb(S, 1, T, t);
-    S = insere_nao_completo_arvb(S, k, t);
+    S = insere_nao_completo_arvb(S, k, info, t);
     return S;
   }
-  T = insere_nao_completo_arvb(T, k, t);
+  T = insere_nao_completo_arvb(T, k, info, t);
   return T;
 }
 
