@@ -6,9 +6,9 @@ static TAGNO *busca_ant_no(TAGNO *no, int id)
 {
     if (!no)
         return no;
-    if (no->irmao && no->irmao->info->id == id)
+    if (no->irmao && no->irmao->id == id)
         return no;
-    if (no->filho && no->filho->info->id == id)
+    if (no->filho && no->filho->id == id)
         return no;
 
     TAGNO *p = busca_ant_no(no->irmao, id);
@@ -63,7 +63,7 @@ static TAGNO *busca_no(TAGNO *no, int id)
 {
     if (!no)
         return no;
-    if (no->info->id == id)
+    if (no->id == id)
         return no;
 
     TAGNO *p = busca_no(no->irmao, id);
@@ -78,7 +78,7 @@ TAGNO *busca(TAG *a, int id)
     return busca_no(a->raiz, id);
 }
 
-TAG *insere(TAG *a, void *info, int pai)
+TAG *insere(TAG *a, int pai, int id, void *info)
 {
     if ((!a || !a->raiz) && pai != 0)
         return a;
@@ -87,6 +87,7 @@ TAG *insere(TAG *a, void *info, int pai)
     novo_no->filho = NULL;
     novo_no->irmao = NULL;
     novo_no->info = info;
+    novo_no->id = id;
 
     if (pai == 0)
     {
@@ -117,7 +118,7 @@ static void imprime_no(TAGNO *t)
     // printf("imprime 2\n");
     printf("<");
     // printf("imprime 3\n");
-    printf("%d", t->info->id);
+    printf("%d", t->id);
     imprime_no(t->irmao);
     imprime_no(t->filho);
     printf(">");
