@@ -123,7 +123,10 @@ TAG *retira(TAG *t, int id)
 
 void destroi(TAG *t)
 {
-    return;
+    if(!t) return;
+    destroi(t->irmao);
+    destroi(t->filho);
+    libera_no(t);
 }
 
 TAG *altera(TAG *t, int id, void *altera_fig(), ...)
