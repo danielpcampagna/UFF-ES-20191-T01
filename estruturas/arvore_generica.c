@@ -2,33 +2,48 @@
 #include <stdlib.h>
 #include "arvore_generica.h"
 
-static TAG *busca_ant(TAG *t, int id)
+static TAGNO *busca_ant_no(TAGNO *no, int id)
 {
-    if (!t) return t;
-    if (t->irmao && t->irmao->info->id == id) return t;
-    if (t->filho && t->filho->info->id == id) return t;
-    
-    TAG *p = busca_ant(t->irmao, id);
-    
-    if (p) return p;
-    return busca_ant(t->filho, id);
+    if (!no)
+        return no;
+    if (no->irmao && no->irmao->info->id == id)
+        return no;
+    if (no->filho && no->filho->info->id == id)
+        return no;
+
+    TAGNO *p = busca_ant_no(no->irmao, id);
+
+    if (p)
+        return p;
+    return busca_ant_no(no->filho, id);
 }
 
-static TAG* ultimo_filho(TAG *p){
-    if(!p) return p;
-    p = p->filho;
-    while(p->irmao) p = p->irmao;
-    return p;
+static TAGNO *busca_ant(TAG *a, int id){
+    return busca_ant_no(a->raiz, id);
 }
 
-static int e_folha(TAG* p){
-    return !p->filho;
+static TAGNO *ultimo_filho(TAGNO *no)
+{
+    if (!no)
+        return no;
+    no = no->filho;
+    while (no->irmao)
+        no = no->irmao;
+    return no;
 }
 
-static void libera_no(TAG* p){
-    if(p) {
-        if(p->info) {
-            if(p->info->figura)
+static int e_folha(TAGNO *no)
+{
+    return !no->filho;
+}
+
+static void libera_no(TAGNO *p)
+{
+    if (p)
+    {
+        if (p->info)
+        {
+            if (p->info->figura)
                 free(p->info->figura);
             free(p->info);
         }
@@ -38,106 +53,143 @@ static void libera_no(TAG* p){
 
 TAG *cria()
 {
-    // TAG *p = malloc(sizeof(TAG));
-    // p->info = NULL;
-    // p->filho = p->irmao = NULL;
-    return NULL;
+    TAG *p = malloc(sizeof(TAG));
+    p->raiz = NULL;
+    return p;
 }
 
-TAG *busca(TAG *t, int id)
+static TAGNO *busca_no(TAGNO *no, int id)
 {
-    if (!t) return t;
-    if (t->info->id == id) return t;
-    
-    TAG *p = busca(t->irmao, id);
-    
-    if (p) return p;
-    return busca(t->filho, id);
+    if (!no)
+        return no;
+    if (no->info->id == id)
+        return no;
+
+    TAGNO *p = busca_no(no->irmao, id);
+
+    if (p)
+        return p;
+    return busca_no(no->filho, id);
 }
 
-TAG* insere(TAG *a, void *info, int pai)
+TAGNO *busca(TAG *a, int id)
 {
-    if(!a && pai != 0) return a;
-    
-    if(pai == 0) {
-        a = malloc(sizeof(TAG));
-        a->filho = NULL;
-        a->irmao = NULL;
-        a->info = info;
+    return busca_no(a->raiz, id);
+}
+
+TAG *insere(TAG *a, void *info, int pai)
+{
+    if ((!a || !a->raiz) && pai != 0)
+        return a;
+
+    TAGNO *novo_no = malloc(sizeof(TAGNO));
+    novo_no->filho = NULL;
+    novo_no->irmao = NULL;
+    novo_no->info = info;
+
+    if (pai == 0)
+    {
+        a->raiz = novo_no;
         return a;
     }
 
-    TAG *no = malloc(sizeof(TAG));
-    no->filho = NULL;
-    no->irmao = NULL;
-    no->info = info;
-
-    TAG *p = busca(a, pai);
-    if(!p) return NULL;
-    if(e_folha(p)) p->filho = no;
-    else {
+    TAGNO *p = busca(a, pai);
+    if (!p)
+        return a;
+    if (e_folha(p))
+        p->filho = novo_no;
+    else
+    {
         p = ultimo_filho(p);
-        p->irmao = no;
+        p->irmao = novo_no;
     }
+
     return a;
 }
 
-void imprime(TAG *t)
+static void imprime_no(TAGNO *t)
 {
-    printf("imprime 1\n");
-    if(!t) return;
-    printf("imprime 2\n");
+
+    // printf("imprime 1\n");
+    if (!t)
+        return;
+    // printf("imprime 2\n");
     printf("<");
-    printf("imprime 3\n");
-    printf("%d",t->info->id);
-    imprime(t->irmao);
-    imprime(t->filho);
+    // printf("imprime 3\n");
+    printf("%d", t->info->id);
+    imprime_no(t->irmao);
+    imprime_no(t->filho);
     printf(">");
 }
 
-TAG *retira(TAG *t, int id)
+void imprime(TAG *a)
 {
-    if(!t) return t;
+    imprime_no(a->raiz);
+}
 
-    TAG *p = busca(t, id);
-    TAG *ant = busca_ant(t, id);
-    
-    if(!p) return t;
-    if(!ant) {
+TAG *retira(TAG *a, int id)
+{
+    if (!a)
+        return a;
+
+    TAGNO *p = busca(a, id);
+    TAGNO *ant = busca_ant(a, id);
+
+    if (!p)
+        return a;
+    if (!ant)
+    { // é raíz!
         // já garante pela inserção de que não tem irmão.
-        if(e_folha(p)) {
+        if (e_folha(p))
+        {
             libera_no(p);
             return NULL;
         }
-        TAG *nova_raiz = p->filho;
-        TAG *ultimo_filho_nova_raiz = ultimo_filho(nova_raiz);
+        TAGNO *nova_raiz = p->filho;
+        TAGNO *ultimo_filho_nova_raiz = ultimo_filho(nova_raiz);
         ultimo_filho_nova_raiz->irmao = nova_raiz->irmao;
         nova_raiz->irmao = NULL;
         libera_no(p);
-        return nova_raiz;
+        a->raiz = nova_raiz;
+        return a;
     }
-    TAG *primeiro_filho_p = p->filho;
-    TAG *ultimo_filho_p = ultimo_filho(p);
-    
-    if(ant->filho == p){
-        if(!e_folha(p)) ant->filho = primeiro_filho_p;
-        else ant->filho = p->irmao;
-    } else if(ant->irmao == p){
-        if(!e_folha(p)) ant->irmao = primeiro_filho_p;
-        else ant->irmao = p->irmao;
+
+    TAGNO *primeiro_filho_p = p->filho;
+    TAGNO *ultimo_filho_p = ultimo_filho(p);
+
+    if (ant->filho == p)
+    {
+        if (!e_folha(p))
+            ant->filho = primeiro_filho_p;
+        else
+            ant->filho = p->irmao;
     }
-    
-    if(!e_folha(p)) ultimo_filho_p->irmao = p->irmao;
+    else if (ant->irmao == p)
+    {
+        if (!e_folha(p))
+            ant->irmao = primeiro_filho_p;
+        else
+            ant->irmao = p->irmao;
+    }
+
+    if (!e_folha(p))
+        ultimo_filho_p->irmao = p->irmao;
     libera_no(p);
-    return t;
+    return a;
 }
 
-void destroi(TAG *t)
+static void destroi_no(TAGNO *no)
 {
-    if(!t) return;
-    destroi(t->irmao);
-    destroi(t->filho);
-    libera_no(t);
+    if (!no)
+        return;
+    destroi_no(no->irmao);
+    destroi_no(no->filho);
+    libera_no(no);
+}
+
+void destroi(TAG *a)
+{
+    destroi_no(a->raiz);
 }
 
 // TAG *altera(TAG *t, void *figura, void *altera_fig())
@@ -145,4 +197,3 @@ void destroi(TAG *t)
 //     TAG *result = NULL;
 //     return result;
 // }
-

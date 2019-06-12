@@ -9,15 +9,17 @@ typedef struct no_figura {
     void *figura;
 } TNOFIG;
 
-typedef struct arvore_generica {
+typedef struct arvore_generica_no {
     TNOFIG *info;
-    struct arvore_generica *filho, *irmao; 
+    struct arvore_generica_no *filho, *irmao; 
+} TAGNO;
+
+typedef struct arvore_generica {
+    TAGNO *raiz;
 } TAG;
 
-
-
 TAG* cria(void);
-TAG* busca(TAG *t, int id);
+TAGNO* busca(TAG *t, int id);
 void imprime(TAG *t);
 TAG* insere(TAG *a, void *info, int pai);
 TAG* retira(TAG *t, int id);
