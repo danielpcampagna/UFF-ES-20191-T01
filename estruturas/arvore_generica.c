@@ -38,16 +38,11 @@ static int e_folha(TAGNO *no)
     return !no->filho;
 }
 
-static void libera_no(TAGNO *p)
+static void libera_no(TAGNO *p) // precisa receber um ponteiro para null e a funcao de liberar esse tipo de estrutura por callback
 {
     if (p)
     {
-        if (p->info)
-        {
-            if (p->info->figura)
-                free(p->info->figura);
-            free(p->info);
-        }
+        libera_no_figura(p->info); // precisa receber a função de liberar a figura por callback
         free(p);
     }
 }

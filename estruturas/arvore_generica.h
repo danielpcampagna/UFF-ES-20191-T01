@@ -3,10 +3,7 @@
 #ifndef ARVORE_GENERICA_H
 #define ARVORE_GENERICA_H
 
-typedef struct no_figura {
-    char tipo[3];
-    void *figura;
-} TNOFIG;
+#include "no_figura.h"
 
 typedef struct arvore_generica_no {
     int id;
