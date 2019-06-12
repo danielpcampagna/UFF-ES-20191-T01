@@ -53,19 +53,29 @@ static void libera_no(TAG* p){
 
 TAG* insere(TAG *a, TNOFIG *info, int pai)
 {
-
-    if(!a) return a;
+    if(!a && pai != 0) return a;
     
+    if(pai == 0) {
+        a = malloc(sizeof(TAG));
+        a->filho = NULL;
+        a->irmao = NULL;
+        a->info = info;
+        return a;
+    }
+
     TAG *no = malloc(sizeof(TAG));
     no->filho = NULL;
     no->irmao = NULL;
+    no->info = info;
 
     TAG *p = busca(a, pai);
     if(!p) return NULL;
-    if(!p->filho) p->filho = no;
-    p = p->filho;
-    while(p->irmao) p = p->irmao;
-    p->irmao = no;
+    if(e_folha(p)) p->filho = no;
+    else {
+        p = ultimo_filho(p);
+        p->irmao = no;
+    }
+    return a;
 }
 
 void imprime(TAG *t)
