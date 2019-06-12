@@ -18,7 +18,8 @@ static TAGNO *busca_ant_no(TAGNO *no, int id)
     return busca_ant_no(no->filho, id);
 }
 
-static TAGNO *busca_ant(TAG *a, int id){
+static TAGNO *busca_ant(TAG *a, int id)
+{
     return busca_ant_no(a->raiz, id);
 }
 
