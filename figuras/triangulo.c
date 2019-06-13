@@ -16,12 +16,12 @@ TTria* alterar_tria(TTria* f, float base, float altura){
 }
 
 float area_tria(TTria* f){
-    return f->base * f->base /2.0f;
+    return f->base * f->altura /2.0f;
 }
 
 void imprime_tria(TTria* f) {
     printf("Triângulo: \n");
-    printf("base: %f", f->base);
-    printf("altura: %f", f->altura);
-    printf("área: %f", area_tria(f));
+    printf("base:   %f\n", f->base);
+    printf("altura: %f\n", f->altura);
+    printf("área:   %f\n", area_tria(f));
 }

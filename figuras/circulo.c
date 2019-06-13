@@ -20,7 +20,7 @@ TCirc* alterar_circ(TCirc* f, float raio){
 }
 
 float area_circ(TCirc* f){
-    return M_PI * pow(f->raio, 2);
+    return M_PI * pow(f->raio, 2.0f);
 }
 
 void imprime_circ(TCirc* f) {

@@ -23,19 +23,21 @@ static TAGNO *busca_ant(TAG *a, int id)
     return busca_ant_no(a->raiz, id);
 }
 
+static int e_folha(TAGNO *no)
+{
+    return !no->filho;
+}
+
 static TAGNO *ultimo_filho(TAGNO *no)
 {
     if (!no)
         return no;
+    if (e_folha(no))
+        return NULL;
     no = no->filho;
     while (no->irmao)
         no = no->irmao;
     return no;
-}
-
-static int e_folha(TAGNO *no)
-{
-    return !no->filho;
 }
 
 static void libera_no(TAGNO *p) // precisa receber um ponteiro para null e a funcao de liberar esse tipo de estrutura por callback
@@ -47,20 +49,20 @@ static void libera_no(TAGNO *p) // precisa receber um ponteiro para null e a fun
     }
 }
 
-static int altura_no(TAGNO *no)
-{
-    if (!no)
-        return 0;
-    int maior = -1, alt;
-    TAGNO *p;
-    for (p = no; p; p = p->irmao)
-    {
-        alt = altura_no(no->filho) + 1;
-        if (alt > maior)
-            maior = alt;
-    }
-    return maior;
-}
+// static int altura_no(TAGNO *no)
+// {
+//     if (!no)
+//         return 0;
+//     int maior = -1, alt;
+//     TAGNO *p;
+//     for (p = no; p; p = p->irmao)
+//     {
+//         alt = altura_no(no->filho) + 1;
+//         if (alt > maior)
+//             maior = alt;
+//     }
+//     return maior;
+// }
 
 TAG *cria()
 {
@@ -192,7 +194,7 @@ TAG *retira(TAG *a, int id)
     TAGNO *primeiro_filho_p = p->filho;
     TAGNO *ultimo_filho_p = ultimo_filho(p);
 
-    if (ant->filho == p)
+    if (!e_folha(ant) && ant->filho == p)
     {
         if (!e_folha(p))
             ant->filho = primeiro_filho_p;

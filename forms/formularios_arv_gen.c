@@ -1,7 +1,9 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
 #include "../estruturas/arvore_generica.h"
+#include "../estruturas/no_figura.h"
 #include "../figuras/circulo.h"
 #include "../figuras/quadrado.h"
 #include "../figuras/retangulo.h"
@@ -57,7 +59,7 @@
 //     int i;
 //     for (i=0;i<5,i++)
 //         if()
-//     return strcmp(tipo, "QUA") || strcmp(tipo, "") ||
+//     return strcmp(tipo, "QUA")==0 || strcmp(tipo, "")==0 ||
 // }
 
 static int alert_se_vazia(TAG *a)
@@ -102,13 +104,21 @@ static TRetg *form_altera_ret(TRetg *f)
 
 static TTrap *form_altera_tra(TTrap *f)
 {
-    float base, alt;
-    printf("Informe o valor da base maior (%f): \n", f->base_maior);
-    scanf("%f", &base);
-    f->base_maior = base;
-    printf("Informe o valor da base menor (%f): \n", f->base_menor);
-    scanf("%f", &base);
-    f->base_menor = base;
+    float base1, base2, alt;
+    printf("Informe o valor da base 1 (%f): \n", f->base_maior);
+    scanf("%f", &base1);
+    printf("Informe o valor da base 2 (%f): \n", f->base_menor);
+    scanf("%f", &base2);
+    if (base1 > base2)
+    {
+        f->base_maior = base1;
+        f->base_menor = base2;
+    }
+    else
+    {
+        f->base_maior = base2;
+        f->base_menor = base1;
+    }
     printf("Informe o valor da altura (%f): \n", f->altura);
     scanf("%f", &alt);
     f->altura = alt;
@@ -134,7 +144,8 @@ static TCirc *form_cria_cir()
     float raio;
     printf("Informe o valor do raio: \n");
     scanf("%f", &raio);
-    return criar_circ(raio);
+    TCirc *result = criar_circ(raio);
+    return result;
 }
 static TQuad *form_cria_qua()
 {
@@ -154,14 +165,17 @@ static TRetg *form_cria_ret()
 }
 static TTrap *form_cria_tra()
 {
-    float base_maior, base_menor, alt;
-    printf("Informe o valor da base maior: \n");
-    scanf("%f", &base_maior);
-    printf("Informe o valor da base menor: \n");
-    scanf("%f", &base_menor);
+    float base1, base2, alt;
+    printf("Informe o valor da base 1: \n");
+    scanf("%f", &base1);
+    printf("Informe o valor da base 2: \n");
+    scanf("%f", &base2);
     printf("Informe o valor da altura: \n");
     scanf("%f", &alt);
-    return criar_trap(base_maior, base_menor, alt);
+    if (base1 > base2)
+        return criar_trap(base1, base2, alt);
+    else
+        return criar_trap(base2, base1, alt);
 }
 static TTria *form_cria_tri()
 {
@@ -264,13 +278,14 @@ void form_acessa_figura(TAG *a)
     }
     do
     {
+        printf("\n#%-3d ", no->id);
         form_imprime_figura(no->info);
 
         printf("\n");
         printf("Escolha uma das opções:\n");
         printf("1. Alterar dimensões.\n");
         printf("2. Remover figura\n");
-        printf("3. Desenhar.\n");
+        // printf("3. Desenhar.\n");
         printf("0. Voltar\n");
         scanf("%d", &op);
 
@@ -280,12 +295,15 @@ void form_acessa_figura(TAG *a)
             // pode ser que nao funcione
         }
         else if (op == 2)
-            form_retirar(a, id);
+        {
+            a = form_retirar(a, id);
+            return;
+        }
         else if (op == 0)
             return;
         else
             printf("Opção inválida.\n");
-    } while (op < 0 || op > 2);
+    } while (op > 0 && op <= 2);
 }
 
 void form_imprimir(TAG *a)
@@ -301,10 +319,11 @@ TAG *form_inserir(TAG *a)
     int op;
     int id, pai;
     void *figura;
+    char tipo[3];
     do
     {
         printf("Digite o número referente ao tipo de figura:\n");
-        printf("1. Cículo.\n");
+        printf("1. Círculo.\n");
         printf("2. Quadrado.\n");
         printf("3. Retângulo.\n");
         printf("4. Trapézio.\n");
@@ -313,15 +332,30 @@ TAG *form_inserir(TAG *a)
         scanf("%d", &op);
 
         if (op == 1)
-            figura = form_cria_cir();
+        {
+            figura = (void *)form_cria_cir();
+            strcpy(tipo, "CIR");
+        }
         else if (op == 2)
-            figura = form_cria_qua();
+        {
+            figura = (void *)form_cria_qua();
+            strcpy(tipo, "QUA");
+        }
         else if (op == 3)
-            figura = form_cria_ret();
+        {
+            figura = (void *)form_cria_ret();
+            strcpy(tipo, "RET");
+        }
         else if (op == 4)
-            figura = form_cria_tra();
+        {
+            figura = (void *)form_cria_tra();
+            strcpy(tipo, "TRA");
+        }
         else if (op == 5)
-            figura = form_cria_tri();
+        {
+            figura = (void *)form_cria_tri();
+            strcpy(tipo, "TRI");
+        }
         else if (op == 0)
             return a;
         else
@@ -340,8 +374,12 @@ TAG *form_inserir(TAG *a)
         printf("Informe o id do seu pai:\n");
         scanf("%d", &pai);
     }
-    printf("\n\n inserindo pai(%d), id(%d), tipo(%d) \n\n", pai, id, op);
-    TAG *nova_arv = insere(a, pai, id, figura);
+    TNOFIG *info = (TNOFIG *)malloc(sizeof(TNOFIG));
+    info->figura = figura;
+    strcpy(info->tipo, tipo);
+
+    printf("\n\n inserindo pai(%d), id(%d), tipo(%s) \n\n", pai, id, tipo);
+    TAG *nova_arv = insere(a, pai, id, info);
     if (!nova_arv)
         printf("Erro ao inserir a figura.\n");
     else
@@ -353,7 +391,7 @@ TAG *form_retirar(TAG *a, int id)
 {
     TAG *nova_arv = retira(a, id);
     if (!nova_arv)
-        printf("Algum erro ocorreu durante a remoção deste nó.\n");
+        printf("\n/!\\Erro: Algum erro ocorreu durante a remoção deste nó.\n");
     else
         a = nova_arv;
 
@@ -375,18 +413,25 @@ TAG *form_destruir(TAG *a)
 
 TAGNO *form_alterar_dim_fig(TAGNO *no)
 {
-    if (strcmp(no->info->tipo, "CIR"))
-        no->info->figura = form_altera_cir((TCirc *)no->info->figura);
-    else if (strcmp(no->info->tipo, "QUA"))
-        no->info->figura = form_altera_qua((TQuad *)no->info->figura);
-    else if (strcmp(no->info->tipo, "RET"))
-        no->info->figura = form_altera_ret((TRetg *)no->info->figura);
-    else if (strcmp(no->info->tipo, "TRA"))
-        no->info->figura = form_altera_tra((TTrap *)no->info->figura);
-    else if (strcmp(no->info->tipo, "TRI"))
-        no->info->figura = form_altera_tri((TTria *)no->info->figura);
+    if (no->info)
+    {
+        if (strcmp(no->info->tipo, "CIR") == 0)
+            no->info->figura = form_altera_cir((TCirc *)no->info->figura);
+        else if (strcmp(no->info->tipo, "QUA") == 0)
+            no->info->figura = form_altera_qua((TQuad *)no->info->figura);
+        else if (strcmp(no->info->tipo, "RET") == 0)
+            no->info->figura = form_altera_ret((TRetg *)no->info->figura);
+        else if (strcmp(no->info->tipo, "TRA") == 0)
+            no->info->figura = form_altera_tra((TTrap *)no->info->figura);
+        else if (strcmp(no->info->tipo, "TRI") == 0)
+            no->info->figura = form_altera_tri((TTria *)no->info->figura);
+        else
+            printf("\n/!\\Erro, figura não definida.\n");
+    }
     else
-        printf("\n/!\\Erro, figura não definida.\n");
+    {
+        printf("\n/!\\Erro, este nó (%d) não possui a info (informação).\n", no->id);
+    }
 
     return no;
 }
@@ -403,29 +448,23 @@ void form_transf_arvb(TAG *a)
 
 void form_imprime_figura(TNOFIG *no)
 {
-    printf("chegou aqui\n");
-    printf("chegou aqui 1\n");
-    if (no->tipo)
-        printf("%s\n", no->tipo);
-    printf("chegou aqui 2\n");
-    if (no->figura)
-        printf("%s\n", no->figura);
-    printf("chegou aqui 3\n");
-    printf("%f\n", ((TCirc *)no->figura)->raio);
 
-    if (strcmp(no->tipo, "CIR"))
-        imprime_circ((TCirc *)no->figura);
-    else if (strcmp(no->tipo, "QUA"))
-        imprime_quad((TQuad *)no->figura);
-    else if (strcmp(no->tipo, "RET"))
-        imprime_retg((TRetg *)no->figura);
-    else if (strcmp(no->tipo, "TRA"))
-        imprime_trap((TTrap *)no->figura);
-    else if (strcmp(no->tipo, "TRI"))
-        imprime_tria((TTria *)no->figura);
-    else
+    if (no)
     {
-        printf("\n/!\\Erro: figura não encontrada.\n");
-        return;
+        if (strcmp(no->tipo, "CIR") == 0)
+            imprime_circ((TCirc *)no->figura);
+        else if (strcmp(no->tipo, "QUA") == 0)
+            imprime_quad((TQuad *)no->figura);
+        else if (strcmp(no->tipo, "RET") == 0)
+            imprime_retg((TRetg *)no->figura);
+        else if (strcmp(no->tipo, "TRA") == 0)
+            imprime_trap((TTrap *)no->figura);
+        else if (strcmp(no->tipo, "TRI") == 0)
+            imprime_tria((TTria *)no->figura);
+        else
+        {
+            printf("\n/!\\Erro: figura não encontrada.\n");
+            return;
+        }
     }
 }
