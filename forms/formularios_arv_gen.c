@@ -462,13 +462,13 @@ void form_transf_avl(TAG *a)
     // fazer menu de controle
 }
 
-static TAB *form_transf_arvb_aux(TAB *arvb, TAGNO *no)
+static TAB *form_transf_arvb_aux(TAB *arvb, TAGNO *no, int t)
 {
     TAGNO *p;
     for (p = no; p; p=p->irmao)
     {
-        arvb = insere_arvb(arvb, p->id, p->info, 2);
-        arvb = form_transf_arvb_aux(arvb, p->filho);
+        arvb = insere_arvb(arvb, p->id, p->info, t);
+        arvb = form_transf_arvb_aux(arvb, p->filho, t);
     }
     return arvb;
 }
@@ -476,9 +476,12 @@ void form_transf_arvb(TAG *a)
 {
     if (alert_se_vazia(a))
         return;
-    
     TAB *arvb = NULL;
-    arvb = form_transf_arvb_aux(arvb, a->raiz);
+    int t = 2;
+    printf("Informe o valor de t:\n");
+    scanf("%d", &t);
+    
+    arvb = form_transf_arvb_aux(arvb, a->raiz, t);
     imprime_arvb(arvb, 2);
 
     // fazer menu de controle

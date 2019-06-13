@@ -30,6 +30,10 @@ TAB *libera_arvb(TAB *a)
         libera_arvb(a->filho[i]);
     }
     free(a->chave);
+    int i;
+    for (i = 0; i < a->nchaves; i++)
+      libera_no_figura(a->info[i]);
+    free(a->info);
     free(a->filho);
     free(a);
     return NULL;
@@ -47,7 +51,7 @@ void imprime_arvb(TAB *a, int andar)
       imprime_arvb(a->filho[i], andar + 1);
       for (j = 0; j <= andar; j++)
         printf("   ");
-      printf("%d\n", a->chave[i]);
+      printf("%3d|%3s\n", a->chave[i], a->info[i]->tipo);
     }
     imprime_arvb(a->filho[i], andar + 1);
   }
@@ -80,7 +84,10 @@ TAB *divisao_arvb(TAB *x, int i, TAB *y, int t)
   z->folha = y->folha;
   int j;
   for (j = 0; j < t - 1; j++)
+  {
     z->chave[j] = y->chave[j + t];
+    z->info[j] = y->info[j + t];
+  }
   if (!y->folha)
   {
     for (j = 0; j < t; j++)
@@ -93,9 +100,12 @@ TAB *divisao_arvb(TAB *x, int i, TAB *y, int t)
   for (j = x->nchaves; j >= i; j--)
     x->filho[j + 1] = x->filho[j];
   x->filho[i] = z;
-  for (j = x->nchaves; j >= i; j--)
+  for (j = x->nchaves; j >= i; j--){
     x->chave[j] = x->chave[j - 1];
+    x->info[j] = x->info[j - 1];
+  }
   x->chave[i - 1] = y->chave[t - 1];
+  x->info[i - 1] = y->info[t - 1];
   x->nchaves++;
   return x;
 }
@@ -169,8 +179,10 @@ TAB *remover_arvb(TAB *arv, int ch, int t)
     { //CASO 1
       printf("\nCASO 1\n");
       int j;
-      for (j = i; j < arv->nchaves - 1; j++)
+      for (j = i; j < arv->nchaves - 1; j++){
         arv->chave[j] = arv->chave[j + 1];
+        arv->info[j] = arv->info[j + 1];
+      }
       arv->nchaves--;
       return arv;
     }
@@ -181,9 +193,11 @@ TAB *remover_arvb(TAB *arv, int ch, int t)
       while (!y->folha)
         y = y->filho[y->nchaves];
       int temp = y->chave[y->nchaves - 1];
+      TNOFIG* temp_info = y->info[y->nchaves - 1];      
       arv->filho[i] = remover_arvb(arv->filho[i], temp, t);
       //Eliminar recursivamente K e substitua K por K' em x
       arv->chave[i] = temp;
+      arv->info[i] = temp_info;
       return arv;
     }
     if (!arv->folha && arv->filho[i + 1]->nchaves >= t)
@@ -193,8 +207,10 @@ TAB *remover_arvb(TAB *arv, int ch, int t)
       while (!y->folha)
         y = y->filho[0];
       int temp = y->chave[0];
+      TNOFIG* temp_info = y->info[0];
       y = remover_arvb(arv->filho[i + 1], temp, t); //Eliminar recursivamente K e substitua K por K' em x
       arv->chave[i] = temp;
+      arv->info[i] = temp_info;
       return arv;
     }
     if (!arv->folha && arv->filho[i + 1]->nchaves == t - 1 && arv->filho[i]->nchaves == t - 1)
@@ -203,14 +219,19 @@ TAB *remover_arvb(TAB *arv, int ch, int t)
       TAB *y = arv->filho[i];
       TAB *z = arv->filho[i + 1];
       y->chave[y->nchaves] = ch; //colocar ch ao final de filho[i]
+      ///////y->info[y->nchaves] = ???; //O que coloca aqui?
       int j;
-      for (j = 0; j < t - 1; j++) //juntar chave[i+1] com chave[i]
+      for (j = 0; j < t - 1; j++){ //juntar chave[i+1] com chave[i]
         y->chave[t + j] = z->chave[j];
+        y->info[t + j] = z->info[j];
+      }
       for (j = 0; j <= t; j++) //juntar filho[i+1] com filho[i]
         y->filho[t + j] = z->filho[j];
       y->nchaves = 2 * t - 1;
-      for (j = i; j < arv->nchaves - 1; j++) //remover ch de arv
+      for (j = i; j < arv->nchaves - 1; j++){ //remover ch de arv
         arv->chave[j] = arv->chave[j + 1];
+        arv->info[j] = arv->info[j + 1];
+      }
       for (j = i + 1; j <= arv->nchaves; j++) //remover ponteiro para filho[i+1]
         arv->filho[j] = arv->filho[j + 1];
       arv->filho[j] = NULL; //Campello
@@ -228,11 +249,15 @@ TAB *remover_arvb(TAB *arv, int ch, int t)
       printf("\nCASO 3A: i menor que nchaves\n");
       z = arv->filho[i + 1];
       y->chave[t - 1] = arv->chave[i]; //dar a y a chave i da arv
+      y->info[t - 1] = arv->info[i]; //dar a y a chave i da arv
       y->nchaves++;
       arv->chave[i] = z->chave[0]; //dar a arv uma chave de z
+      arv->info[i] = z->info[0]; //dar a arv uma chave de z
       int j;
-      for (j = 0; j < z->nchaves - 1; j++) //ajustar chaves de z
+      for (j = 0; j < z->nchaves - 1; j++){ //ajustar chaves de z
         z->chave[j] = z->chave[j + 1];
+        z->info[j] = z->info[j + 1];
+      }
       //z->chave[j] = 0; Rosseti
       y->filho[y->nchaves] = z->filho[0]; //enviar ponteiro menor de z para o novo elemento em y
       for (j = 0; j < z->nchaves; j++)    //ajustar filhos de z
@@ -246,13 +271,17 @@ TAB *remover_arvb(TAB *arv, int ch, int t)
       printf("\nCASO 3A: i igual a nchaves\n");
       z = arv->filho[i - 1];
       int j;
-      for (j = y->nchaves; j > 0; j--) //encaixar lugar da nova chave
+      for (j = y->nchaves; j > 0; j--){ //encaixar lugar da nova chave
         y->chave[j] = y->chave[j - 1];
+        y->info[j] = y->info[j - 1];
+      }
       for (j = y->nchaves + 1; j > 0; j--) //encaixar lugar dos filhos da nova chave
         y->filho[j] = y->filho[j - 1];
       y->chave[0] = arv->chave[i - 1]; //dar a y a chave i da arv
+      y->info[0] = arv->info[i - 1]; //dar a y a chave i da arv
       y->nchaves++;
       arv->chave[i - 1] = z->chave[z->nchaves - 1]; //dar a arv uma chave de z
+      arv->info[i - 1] = z->info[z->nchaves - 1]; //dar a arv uma chave de z
       y->filho[0] = z->filho[z->nchaves];           //enviar ponteiro de z para o novo elemento em y
       z->nchaves--;
       arv->filho[i] = remover_arvb(y, ch, t);
@@ -265,11 +294,13 @@ TAB *remover_arvb(TAB *arv, int ch, int t)
         printf("\nCASO 3B: i menor que nchaves\n");
         z = arv->filho[i + 1];
         y->chave[t - 1] = arv->chave[i]; //pegar chave [i] e coloca ao final de filho[i]
+        y->info[t - 1] = arv->info[i]; //pegar chave [i] e coloca ao final de filho[i]
         y->nchaves++;
         int j;
         for (j = 0; j < t - 1; j++)
         {
           y->chave[t + j] = z->chave[j]; //passar filho[i+1] para filho[i]
+          y->info[t + j] = z->info[j]; //passar filho[i+1] para filho[i]
           y->nchaves++;
         }
         if (!y->folha)
@@ -282,6 +313,7 @@ TAB *remover_arvb(TAB *arv, int ch, int t)
         for (j = i; j < arv->nchaves - 1; j++)
         { //limpar referências de i
           arv->chave[j] = arv->chave[j + 1];
+          arv->info[j] = arv->info[j + 1];
           arv->filho[j + 1] = arv->filho[j + 2];
         }
         arv->nchaves--;
@@ -292,15 +324,20 @@ TAB *remover_arvb(TAB *arv, int ch, int t)
       {
         printf("\nCASO 3B: i igual a nchaves\n");
         z = arv->filho[i - 1];
-        if (i == arv->nchaves)
+        if (i == arv->nchaves){
           z->chave[t - 1] = arv->chave[i - 1]; //pegar chave[i] e poe ao final de filho[i-1]
-        else
+          z->info[t - 1] = arv->info[i - 1]; //pegar chave[i] e poe ao final de filho[i-1]
+        }
+        else{
           z->chave[t - 1] = arv->chave[i]; //pegar chave [i] e poe ao final de filho[i-1]
+          z->info[t - 1] = arv->info[i]; //pegar chave [i] e poe ao final de filho[i-1]
+        }
         z->nchaves++;
         int j;
         for (j = 0; j < t - 1; j++)
         {
           z->chave[t + j] = y->chave[j]; //passar filho[i+1] para filho[i]
+          z->info[t + j] = y->info[j]; //passar filho[i+1] para filho[i]
           z->nchaves++;
         }
         if (!z->folha)

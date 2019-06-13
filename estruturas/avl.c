@@ -158,7 +158,7 @@ static void imprime_aux(TAVL *a, int andar)
         imprime_aux(a->esq, andar + 1);
         for (j = 0; j <= andar; j++)
             printf("   ");
-        printf("%d\n", a->id); // precisa passar a funcao como callack
+        printf("%3d|%3s\n", a->id, a->info->tipo); // precisa passar a funcao como callack
         imprime_aux(a->dir, andar + 1);
     }
 }
