@@ -40,11 +40,11 @@ static TAGNO *ultimo_filho(TAGNO *no)
     return no;
 }
 
-static void libera_no(TAGNO *p) // precisa receber um ponteiro para null e a funcao de liberar esse tipo de estrutura por callback
+static void libera_no(TAGNO *p) // pode receber um ponteiro para null e a funcao de liberar esse tipo de estrutura por callback
 {
     if (p)
     {
-        libera_no_figura(p->info); // precisa receber a função de liberar a figura por callback
+        libera_no_figura(p->info); // pode receber a função de liberar a figura por callback
         free(p);
     }
 }

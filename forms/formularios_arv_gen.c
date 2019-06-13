@@ -3,6 +3,7 @@
 #include <string.h>
 #include <ctype.h>
 #include "../estruturas/arvore_generica.h"
+#include "../estruturas/avl.h"
 #include "../estruturas/no_figura.h"
 #include "../figuras/circulo.h"
 #include "../figuras/quadrado.h"
@@ -204,6 +205,7 @@ void form_carrega_arquivo()
         printf("Nao foi possivel abrir o arquivo %s.\n", nome_arquivo);
 }
 
+// FUNCAO PRINCIPAL
 void form_inicio(TAG *a)
 {
     int op;
@@ -435,10 +437,28 @@ TAGNO *form_alterar_dim_fig(TAGNO *no)
 
     return no;
 }
+
+static TAVL *form_transf_avl_aux(TAVL *avl, TAGNO *no)
+{
+    TAGNO *p;
+    for (p = no; p; p=p->irmao)
+    {
+        avl = insere_avl(avl, p->id, p->info);
+        avl = form_transf_avl_aux(avl, p->filho);
+    }
+    return avl;
+}
+
 void form_transf_avl(TAG *a)
 {
+
     if (alert_se_vazia(a))
         return;
+    TAVL *avl = NULL;
+    avl = form_transf_avl_aux(avl, a->raiz);
+    imprime_avl(avl);
+
+    // fazer menu de controle
 }
 void form_transf_arvb(TAG *a)
 {
