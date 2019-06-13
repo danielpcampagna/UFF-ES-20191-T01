@@ -60,6 +60,16 @@
 //     return strcmp(tipo, "QUA") || strcmp(tipo, "") ||
 // }
 
+static int alert_se_vazia(TAG *a)
+{
+    if (vazia(a))
+    {
+        printf("\n/!\\ Árvore vazia.\n\n");
+        return 1;
+    }
+    return 0;
+}
+
 static TCirc *form_altera_cir(TCirc *f)
 {
     float novo_raio;
@@ -186,27 +196,27 @@ void form_inicio(TAG *a)
     while (1)
     {
         printf("Escolha uma das opções:\n");
-        if (a)
+        if (vazia(a))
             printf("*");
         printf("1. Acessar uma figura.\n");
-        if (a)
+        if (vazia(a))
             printf("*");
         printf("2. Imprimir a árvore.\n");
         printf("3. Inserir nova figura.\n");
         //printf("4. Retirar figuras, passando seus descendentes para outro pai.\n");
-        if (a)
+        if (vazia(a))
             printf("*");
         printf("4. Destruir a árvore.\n");
         //printf("6. Alterar as dimensões da figura.\n");
-        if (a)
+        if (vazia(a))
             printf("*");
         printf("5. Transformar a árvore numa árvore binária de busca balanceada.\n");
-        if (a)
+        if (vazia(a))
             printf("*");
         printf("6. Transformar a árvore numa árvore B.\n");
         printf("0. Voltar.\n");
         printf("------\n");
-        if (a)
+        if (vazia(a))
             printf("* com a árvore vazia essas opções não podem ser executadas.\n");
         printf("\n");
         scanf("%d", &op);
@@ -223,7 +233,6 @@ void form_inicio(TAG *a)
         {
             a = form_destruir(a);
             a = cria();
-            return;
         }
         // else if (op == 6)
         //     form_alterar_dim_fig(a);
@@ -237,15 +246,22 @@ void form_inicio(TAG *a)
             printf("Opção inválida.\n");
     }
 }
-
 void form_acessa_figura(TAG *a)
 {
+    if (alert_se_vazia(a))
+        return;
+
     int id, op;
     printf("Informe o id da figura:\n");
     scanf("%d", &id);
 
     TAGNO *no = busca(a, id);
 
+    if (!no)
+    {
+        printf("/!\\Erro: Elemento não encontrado.\n");
+        return;
+    }
     do
     {
         form_imprime_figura(no->info);
@@ -274,7 +290,10 @@ void form_acessa_figura(TAG *a)
 
 void form_imprimir(TAG *a)
 {
+    if (alert_se_vazia(a))
+        return;
     imprime(a);
+    printf("\n");
 }
 
 TAG *form_inserir(TAG *a)
@@ -310,21 +329,18 @@ TAG *form_inserir(TAG *a)
     } while (op < 0 || op > 5);
 
     imprime(a);
-    // getchar();
+    printf("\n");
+
     printf("Informe o id do novo nó:\n");
     scanf("%d", &id);
-    printf("1 chegou aqui\n");
-    if (!a || !a->raiz){
-        printf("2 chegou aqui\n");
+    if (vazia(a))
         pai = 0;
-    }
     else
     {
-        printf("2 chegou aqui\n");
         printf("Informe o id do seu pai:\n");
         scanf("%d", &pai);
     }
-    printf("3 chegou aqui | pai %d", pai);
+    printf("\n\n inserindo pai(%d), id(%d), tipo(%d) \n\n", pai, id, op);
     TAG *nova_arv = insere(a, pai, id, figura);
     if (!nova_arv)
         printf("Erro ao inserir a figura.\n");
@@ -345,6 +361,9 @@ TAG *form_retirar(TAG *a, int id)
 }
 TAG *form_destruir(TAG *a)
 {
+    if (alert_se_vazia(a))
+        return a;
+
     char op;
     printf("Você realmente deseja destruir a árvore inteira? (y/n):\n");
     scanf(" %c", &op);
@@ -367,15 +386,33 @@ TAGNO *form_alterar_dim_fig(TAGNO *no)
     else if (strcmp(no->info->tipo, "TRI"))
         no->info->figura = form_altera_tri((TTria *)no->info->figura);
     else
-        printf("Erro, figura não definida.\n");
+        printf("\n/!\\Erro, figura não definida.\n");
 
     return no;
 }
-void form_transf_avl(TAG *a) {}
-void form_transf_arvb(TAG *a) {}
+void form_transf_avl(TAG *a)
+{
+    if (alert_se_vazia(a))
+        return;
+}
+void form_transf_arvb(TAG *a)
+{
+    if (alert_se_vazia(a))
+        return;
+}
 
 void form_imprime_figura(TNOFIG *no)
 {
+    printf("chegou aqui\n");
+    printf("chegou aqui 1\n");
+    if (no->tipo)
+        printf("%s\n", no->tipo);
+    printf("chegou aqui 2\n");
+    if (no->figura)
+        printf("%s\n", no->figura);
+    printf("chegou aqui 3\n");
+    printf("%f\n", ((TCirc *)no->figura)->raio);
+
     if (strcmp(no->tipo, "CIR"))
         imprime_circ((TCirc *)no->figura);
     else if (strcmp(no->tipo, "QUA"))
@@ -388,7 +425,7 @@ void form_imprime_figura(TNOFIG *no)
         imprime_tria((TTria *)no->figura);
     else
     {
-        printf("Erro: figura não encontrada.\n");
+        printf("\n/!\\Erro: figura não encontrada.\n");
         return;
     }
 }

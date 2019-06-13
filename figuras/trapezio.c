@@ -23,8 +23,8 @@ float area_trap(TTrap* f){
 
 void imprime_trap(TTrap* f) {
     printf("Trapézio: \n");
-    printf("base maior: %f", f->base_maior);
-    printf("base menor: %f", f->base_menor);
-    printf("altura: %f", f->altura);
-    printf("área: %f", area_trap(f));
+    printf("base maior: %f\n", f->base_maior);
+    printf("base menor: %f\n", f->base_menor);
+    printf("altura: %f\n", f->altura);
+    printf("área: %f\n", area_trap(f));
 }

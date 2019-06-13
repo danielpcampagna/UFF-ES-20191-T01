@@ -21,7 +21,7 @@ float area_retg(TRetg* f){
 
 void imprime_retg(TRetg* f) {
     printf("Retângulo: \n");
-    printf("base: %f", f->base);
-    printf("altura: %f", f->altura);
-    printf("área: %f", area_retg(f));
+    printf("base: %f\n", f->base);
+    printf("altura: %f\n", f->altura);
+    printf("área: %f\n", area_retg(f));
 }

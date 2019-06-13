@@ -25,6 +25,6 @@ float area_circ(TCirc* f){
 
 void imprime_circ(TCirc* f) {
     printf("Círulo: \n");
-    printf("raio: %f", f->raio);
-    printf("área: %f", area_circ(f));
+    printf("raio: %f\n", f->raio);
+    printf("área: %f\n", area_circ(f));
 }

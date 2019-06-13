@@ -21,6 +21,6 @@ float area_quad(TQuad* f){
 
 void imprime_quad(TQuad* f) {
     printf("Quadrado: \n");
-    printf("lado: %f", f->lado);
-    printf("área: %f", area_quad(f));
+    printf("lado: %f\n", f->lado);
+    printf("área: %f\n", area_quad(f));
 }

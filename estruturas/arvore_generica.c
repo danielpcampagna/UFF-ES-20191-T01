@@ -47,6 +47,21 @@ static void libera_no(TAGNO *p) // precisa receber um ponteiro para null e a fun
     }
 }
 
+static int altura_no(TAGNO *no)
+{
+    if (!no)
+        return 0;
+    int maior = -1, alt;
+    TAGNO *p;
+    for (p = no; p; p = p->irmao)
+    {
+        alt = altura_no(no->filho) + 1;
+        if (alt > maior)
+            maior = alt;
+    }
+    return maior;
+}
+
 TAG *cria()
 {
     TAG *p = malloc(sizeof(TAG));
@@ -70,29 +85,43 @@ static TAGNO *busca_no(TAGNO *no, int id)
 
 TAGNO *busca(TAG *a, int id)
 {
+    if (vazia(a))
+        return NULL;
     return busca_no(a->raiz, id);
 }
 
 int vazia(TAG *a)
 {
-    printf("chamou vazia");
-    return !a || !a->raiz;
+    return !a || !(a->raiz);
 }
 
 TAG *insere(TAG *a, int pai, int id, void *info)
 {
-    printf("%d %d", pai, id);
-    if ((!a || !a->raiz) && pai != 0)
+    if (id == pai)
+    {
+        printf("/!\\Erro: O novo id e id do pai não pode ser o mesmo.\n");
         return a;
+    }
+    if (vazia(a) && pai > 0)
+    {
+        printf("/!\\Erro: Deve ter apenas uma raíz.\n");
+        return a;
+    }
+    if (busca(a, id) != NULL)
+    {
+        printf("/!\\Erro: A árvore genérica não permite que dois nśo tenham um mesmo id.\n");
+        return a;
+    }
 
     TAGNO *novo_no = malloc(sizeof(TAGNO));
     novo_no->filho = NULL;
     novo_no->irmao = NULL;
-    novo_no->info = info;
+    novo_no->info = (TNOFIG *)info;
     novo_no->id = id;
 
     if (pai == 0)
     {
+        a = cria();
         a->raiz = novo_no;
         return a;
     }
@@ -111,19 +140,18 @@ TAG *insere(TAG *a, int pai, int id, void *info)
     return a;
 }
 
-static void imprime_no(TAGNO *t)
+static void imprime_no(TAGNO *t, int andar)
 {
+    TAGNO *p;
+    int i;
+    for (i = 0; i < andar; i++)
+        printf("      ");
+    printf("%6d", t->id); // fazer o print da fig
+    printf("|%s", t->info->tipo);
+    printf("\n");
 
-    // printf("imprime 1\n");
-    if (!t)
-        return;
-    // printf("imprime 2\n");
-    printf("<");
-    // printf("imprime 3\n");
-    printf("%d", t->id);
-    imprime_no(t->irmao);
-    imprime_no(t->filho);
-    printf(">");
+    for (p = t->filho; p != NULL; p = p->irmao)
+        imprime_no(p, andar + 1);
 }
 
 void imprime(TAG *a)
@@ -131,7 +159,7 @@ void imprime(TAG *a)
     if (!a)
         printf("> árvore vazia...\n");
     else
-        imprime_no(a->raiz);
+        imprime_no(a->raiz, 0);
 }
 
 TAG *retira(TAG *a, int id)
