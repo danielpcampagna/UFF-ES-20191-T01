@@ -73,8 +73,15 @@ TAGNO *busca(TAG *a, int id)
     return busca_no(a->raiz, id);
 }
 
+int vazia(TAG *a)
+{
+    printf("chamou vazia");
+    return !a || !a->raiz;
+}
+
 TAG *insere(TAG *a, int pai, int id, void *info)
 {
+    printf("%d %d", pai, id);
     if ((!a || !a->raiz) && pai != 0)
         return a;
 
@@ -121,7 +128,10 @@ static void imprime_no(TAGNO *t)
 
 void imprime(TAG *a)
 {
-    imprime_no(a->raiz);
+    if (!a)
+        printf("> árvore vazia...\n");
+    else
+        imprime_no(a->raiz);
 }
 
 TAG *retira(TAG *a, int id)
@@ -184,9 +194,10 @@ static void destroi_no(TAGNO *no)
     libera_no(no);
 }
 
-void destroi(TAG *a)
+TAG *destroi(TAG *a)
 {
     destroi_no(a->raiz);
+    return NULL;
 }
 
 // TAG *altera(TAG *t, void *figura, void *altera_fig())

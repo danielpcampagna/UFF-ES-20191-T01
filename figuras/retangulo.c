@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <stdio.h>
 #include "retangulo.h"
 
 TRetg* criar_retg(float base, float altura){
@@ -16,4 +17,11 @@ TRetg* alterar_retg(TRetg* f, float base, float altura){
 
 float area_retg(TRetg* f){
     return f->base * f->altura;
+}
+
+void imprime_retg(TRetg* f) {
+    printf("Retângulo: \n");
+    printf("base: %f", f->base);
+    printf("altura: %f", f->altura);
+    printf("área: %f", area_retg(f));
 }

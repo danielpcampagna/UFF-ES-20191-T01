@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <stdio.h>
 #include "trapezio.h"
 
 TTrap* criar_trap(float base_maior, float base_menor, float altura){
@@ -18,4 +19,12 @@ TTrap* alterar_trap(TTrap* f, float base_maior, float base_menor, float altura){
 
 float area_trap(TTrap* f){
     return ((f->base_maior + f->base_menor) * f->altura) / 2.0f;
+}
+
+void imprime_trap(TTrap* f) {
+    printf("Trapézio: \n");
+    printf("base maior: %f", f->base_maior);
+    printf("base menor: %f", f->base_menor);
+    printf("altura: %f", f->altura);
+    printf("área: %f", area_trap(f));
 }

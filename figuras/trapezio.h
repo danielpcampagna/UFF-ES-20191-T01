@@ -8,5 +8,6 @@ typedef struct trapezio {
 TTrap* criar_trap(float base_maior, float base_menor, float altura);
 TTrap* alterar_trap(TTrap* f, float base_maior, float base_menor, float altura);
 float area_trap(TTrap* f);
+void imprime_trap(TTrap* f);
 
 #endif // TRAPEZIO_H

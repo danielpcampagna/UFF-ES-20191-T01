@@ -8,6 +8,6 @@ typedef struct circulo {
 TCirc* criar_circ(float raio);
 TCirc* alterar_circ(TCirc* f, float raio);
 float area_circ(TCirc* f);
-char* to_string(TCirc* f);
+void imprime_circ(TCirc* f);
 
 #endif //CIRCULO_H

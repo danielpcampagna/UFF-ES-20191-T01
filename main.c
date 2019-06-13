@@ -1,10 +1,33 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "figuras/circulo.h"
-#include "estruturas/estruturas.h"
+#include "forms/formularios_arv_gen.h"
 
 int main(){
-    TCirc *a = criar_circ(10.0);
+    int op=-1;
+    while (op)
+    {
+        printf("Escolha uma opçao:\n");
+        printf("1. Carregar do arquivo.\n");
+        printf("2. Inicializar árvore vazia.\n");
+        printf("0. Sair.\n");
+        scanf("%d", &op);
+
+        switch (op)
+        {
+        case 1:
+            form_carrega_arquivo();
+            break;
+        case 2:
+            form_inicio(NULL);
+            break;
+        case 0:
+            printf("Fim do programa.\n");
+            break;
+        default:
+            printf("Opção inválida.\n");
+            break;
+        }
+    }
 
     return 0;
 }

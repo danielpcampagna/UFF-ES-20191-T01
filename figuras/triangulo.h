@@ -8,5 +8,6 @@ typedef struct triangulo {
 TTria* criar_tria(float base, float altura);
 TTria* alterar_tria(TTria* f, float base, float altura);
 float area_tria(TTria* f);
+void imprime_tria(TTria* f);
 
 #endif // TRIANGULO_H

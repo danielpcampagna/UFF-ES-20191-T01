@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <stdio.h>
 #include <math.h>
 
 #ifndef M_PI
@@ -20,4 +21,10 @@ TCirc* alterar_circ(TCirc* f, float raio){
 
 float area_circ(TCirc* f){
     return M_PI * pow(f->raio, 2);
+}
+
+void imprime_circ(TCirc* f) {
+    printf("Círulo: \n");
+    printf("raio: %f", f->raio);
+    printf("área: %f", area_circ(f));
 }
