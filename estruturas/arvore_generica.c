@@ -156,8 +156,8 @@ static void imprime_no(TAGNO *t, int andar)
 
 void imprime(TAG *a)
 {
-    if (!a)
-        printf("> árvore vazia...\n");
+    if (vazia(a))
+        printf("\n/!\\ árvore vazia...\n");
     else
         imprime_no(a->raiz, 0);
 }
