@@ -4,6 +4,7 @@
 #include <ctype.h>
 #include "../estruturas/arvore_generica.h"
 #include "../estruturas/avl.h"
+#include "../estruturas/arvb.h"
 #include "../estruturas/no_figura.h"
 #include "../figuras/circulo.h"
 #include "../figuras/quadrado.h"
@@ -460,10 +461,27 @@ void form_transf_avl(TAG *a)
 
     // fazer menu de controle
 }
+
+static TAB *form_transf_arvb_aux(TAB *arvb, TAGNO *no)
+{
+    TAGNO *p;
+    for (p = no; p; p=p->irmao)
+    {
+        arvb = insere_arvb(arvb, p->id, p->info, 2);
+        arvb = form_transf_arvb_aux(arvb, p->filho);
+    }
+    return arvb;
+}
 void form_transf_arvb(TAG *a)
 {
     if (alert_se_vazia(a))
         return;
+    
+    TAB *arvb = NULL;
+    arvb = form_transf_arvb_aux(arvb, a->raiz);
+    imprime_arvb(arvb, 2);
+
+    // fazer menu de controle
 }
 
 void form_imprime_figura(TNOFIG *no)
